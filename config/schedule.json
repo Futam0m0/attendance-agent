@@ -1,0 +1,77 @@
+{
+  "classes": [
+    {
+      "name": "Operating Systems",
+      "day": "Monday",
+      "time": "12:00",
+      "remind_minutes": 5
+    },
+    {
+      "name": "Operating Systems",
+      "day": "Wednesday",
+      "time": "12:00",
+      "remind_minutes": 5
+    },
+    {
+      "name": "Database",
+      "day": "Wednesday",
+      "time": "16:30",
+      "remind_minutes": 5
+    },
+    {
+      "name": "Calculus",
+      "day": "Monday",
+      "time": "13:30",
+      "remind_minutes": 5
+    },
+    {
+      "name": "Calculus",
+      "day": "Wednesday",
+      "time": "13:30",
+      "remind_minutes": 5
+    },
+    {
+      "name": "Deep Learning",
+      "day": "Friday",
+      "time": "12:00",
+      "remind_minutes": 5
+    },
+    {
+      "name": "Matlab",
+      "day": "Friday",
+      "time": "15:00",
+      "remind_minutes": 5
+    },
+    {
+      "name": "Taekwondo",
+      "day": "Monday",
+      "time": "09:00",
+      "remind_minutes": 5
+    }
+
+  ],
+
+  "ucheck": {
+    "enabled": true,
+    "trigger_time": "08:30",
+    "retry_count": 3,
+    "retry_interval_seconds": 300
+  },
+
+  "deadlines": [
+    {
+      "name": "DB weekly Assignment",
+      "day": "Wednesday",
+      "time": "16:30",
+      "remind_days_before": [3, 1],
+      "remind_time": "09:00"
+    },
+    {
+      "name": "Matlab Weekly Assignment",
+      "day": "Thursday",
+      "time": "23:59",
+      "remind_days_before": [3, 1],
+      "remind_time": "09:00"
+    }
+  ]
+}
