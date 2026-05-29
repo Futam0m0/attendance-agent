@@ -24,7 +24,7 @@ All reminders are adaptive — if you do not respond to the attendance check-in 
 
 ## System architecture
 
-![System Diagram](assets/system-diagram.png)
+![System Diagram](assets/system-diagram.svg)
 
 The system uses a two-bot architecture:
 
