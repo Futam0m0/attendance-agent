@@ -1,8 +1,6 @@
-# 📡 Attendance Agent — Mei Ling
+# Adaptive Attendance & Submission Reminder System
 
-> *"Snake, this is Mei Ling. Your class starts in 15 minutes — don't be late!"*
-
-An agentic attendance and submission reminder system that autonomously monitors your class schedule and sends adaptive Telegram reminders. Built with Python and themed around the Metal Gear Solid codec system.
+An agentic automation system that autonomously monitors your class schedule and sends adaptive Telegram reminders. Built as a university Operating Systems course project.
 
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)
 ![Telegram](https://img.shields.io/badge/Telegram-Bot-26A5E4?style=flat&logo=telegram&logoColor=white)
@@ -13,18 +11,18 @@ An agentic attendance and submission reminder system that autonomously monitors 
 
 ## What it does
 
-Mei Ling runs silently in the background and contacts you over "codec" (Telegram) to:
+The agent runs silently in the background and sends Telegram messages to:
 
 - 🔔 Remind you before each class starts
-- 🩺 Remind you to complete uCheck before every class — with escalating follow-ups if ignored
-- 📝 Alert you about assignment deadlines 3 days and 1 day before they're due
-- 📋 Give you a full daily debrief on demand
+- 🩺 Remind you to complete your attendance check-in before every class — with escalating follow-ups if ignored
+- 📝 Alert you about assignment deadlines 3 days and 1 day before they are due
+- 📋 Give you a full daily summary on demand
 
-All reminders are adaptive — if you don't respond to uCheck, she retries up to 3 times at 5-minute intervals with increasing urgency. The moment you reply `/ucheck_done`, she stands down.
+All reminders are adaptive — if you do not respond to the attendance check-in prompt, the agent retries up to 3 times at 5-minute intervals with increasing urgency. The moment you reply `/ucheck_done`, it stops.
 
 ---
 
-## System Architecture
+## System architecture
 
 ![System Diagram](assets/system-diagram.png)
 
@@ -32,10 +30,10 @@ The system uses a two-bot architecture:
 
 | Bot | Role |
 |---|---|
-| **Mei Ling** (this agent) | Runs the autonomous reminder loop |
-| **Colonel Campbell** (OpenClaw) | Natural language interface — edit schedules by texting him |
+| **Attendance Agent Bot** | Runs the autonomous reminder loop |
+| **AI Assistant Bot** (optional) | Natural language interface — edit schedules by texting it |
 
-Colonel Campbell edits `schedule.json` directly. You send `/reload` to Mei Ling to apply changes instantly — no restart needed.
+The AI Assistant Bot edits `schedule.json` directly. You send `/reload` to the Attendance Agent Bot to apply changes instantly — no restart needed.
 
 ---
 
@@ -45,7 +43,7 @@ Every 60 seconds the agent runs an **Observe → Decide → Act** cycle:
 
 ```
 Observe  →  Read system time, today's classes, uCheck status
-Decide   →  Is a class starting soon? uCheck pending? Retry overdue?
+Decide   →  Is a class starting soon? Check-in pending? Retry overdue?
 Act      →  Send Telegram message, update state, log action
 ```
 
@@ -57,13 +55,13 @@ State resets automatically at midnight. No manual intervention needed.
 
 | Command | Description |
 |---|---|
-| `/start` | Open codec channel |
-| `/today` | Today's mission briefing |
-| `/deadlines` | Upcoming submission objectives |
-| `/ucheck_done` | Confirm uCheck complete — stops retries |
-| `/summary` | Full daily debrief |
+| `/start` | Start the bot and list available commands |
+| `/today` | Show today's class schedule |
+| `/deadlines` | Show upcoming submission deadlines |
+| `/ucheck_done` | Confirm attendance check-in complete — stops retries |
+| `/summary` | Full daily summary |
 | `/status` | Live agent status |
-| `/reload` | Sync schedule changes from Colonel Campbell |
+| `/reload` | Apply schedule changes without restarting |
 
 ---
 
@@ -79,7 +77,7 @@ attendance_agent/
 ├── config/
 │   ├── settings.py           ← config loader
 │   └── schedule.json         ← your timetable and deadlines
-├── logs/                     ← agent.log written here
+├── logs/                     ← agent.log written here automatically
 ├── tests/
 │   └── test_agent.py         ← unit tests for brain logic
 └── requirements.txt
@@ -169,7 +167,7 @@ Edit `config/schedule.json` with your real timetable:
 |---|---|
 | `day` | Full day name: `Monday`, `Tuesday`, etc. |
 | `time` | 24h format: `09:00`, `14:00` |
-| `remind_minutes` | How many minutes before class to remind |
+| `remind_minutes` | How many minutes before class to send the reminder |
 | `remind_days_before` | List of days before deadline to send alerts |
 | `remind_time` | Time of day to send deadline reminders |
 
@@ -179,31 +177,37 @@ Edit `config/schedule.json` with your real timetable:
 python3 main.py
 ```
 
-Send `/start` to your bot on Telegram to confirm it's running.
+Send `/start` to your bot on Telegram to confirm it is running.
 
 **Optional — create a shortcut alias:**
 
 ```bash
-echo "alias meilin='cd ~/attendance-agent && source venv/bin/activate && python3 main.py'" >> ~/.bashrc
+echo "alias attendance='cd ~/attendance-agent && source venv/bin/activate && python3 main.py'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-Then just type `meilin` to start it.
+Then just type `attendance` to start it.
 
 ---
 
-## Editing your schedule via Colonel Campbell (optional)
+## Editing your schedule via an AI assistant (optional)
 
-If you use OpenClaw as a second Telegram bot, you can add this to its system prompt to enable natural language schedule editing:
+If you use a second Telegram bot powered by an AI assistant, add this to its system prompt to enable natural language schedule editing:
 
-> *"You have access to my schedule file at `~/attendance-agent/config/schedule.json`. When I ask you to add or remove a class or deadline, edit the file directly and remind me to send /reload to Mei Ling."*
+> "You have access to my schedule file at `~/attendance-agent/config/schedule.json`. When I ask you to add or remove a class or deadline, edit the file directly and remind me to send /reload to the attendance bot."
 
-Then just text Colonel Campbell:
+Then just text the assistant:
 ```
-Tell Mei Ling to add Linear Algebra every Friday at 2pm
+Add Linear Algebra every Friday at 2pm, remind me 10 minutes before
 ```
 
-And send `/reload` to Mei Ling to apply the change instantly.
+And send `/reload` to the attendance bot to apply the change instantly.
+
+---
+
+## Personalisation
+
+All reminder message text is defined in `agent/bot.py` and `agent/scheduler.py`. Edit the message strings in those files to change the tone, language, or style to suit your preference.
 
 ---
 
@@ -234,7 +238,3 @@ This project was built as a university Operating Systems course project. Concept
 - [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
 - [python-dotenv](https://github.com/theskumar/python-dotenv)
 - Python `asyncio`, `zoneinfo`, `logging`
-
----
-
-*Codec frequency 140.96 — Mei Ling standing by.*
